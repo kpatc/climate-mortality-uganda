@@ -1,0 +1,13 @@
+date,model,cv_strategy,cv_score,cv_f1,cv_auc,lb_public,notes
+2026-09-10 11:08,LightGBM,GroupKFold-location-5fold,0.7863,0.7771,0.8,,"Baseline LightGBM, features v1, class_weight=balanced, threshold=0.5"
+2026-09-10 12:22,LightGBM-Optuna,GroupKFold-location-5fold,0.7932,0.7883,0.8006,,Optuna 50 trials + geo_cluster + age_te
+2026-09-10 12:22,LightGBM-Optuna,StratKFold-10fold,0.7878,0.7893,0.7855,,Optuna 50 trials + geo_cluster + age_te
+2026-09-10 12:27,LightGBM-Optuna-clean,group,0.7982,0.7923,0.807,,"Optuna50 best params, base 59 features, no geo extras"
+2026-09-10 12:50,LightGBM-Optuna-scalePW,GroupKFold-5,0.8003,0.7958,0.807,0.8113 (v1),scale_pos_weight au lieu de class_weight=balanced
+2026-09-11,LGBM_Optuna75_v2features,GroupKFold(5)_by_location,0.8061,0.8039,0.8093,,"Optuna 75 trials sur 78 features (59 v1 + 19 NASA POWER). Best params: {'learning_rate': 0.012569995069634389, 'num_leaves': 231, 'min_child_samples': 5, 'feature_fraction': 0.9216415979047079, 'bagging_fraction': 0.6656278074056516, 'bagging_freq': 5, 'reg_alpha': 0.0008237191578378152, 'reg_lambda': 0.0008514875088670362}"
+2026-09-11,LGBM_v5params_v3features,GroupKFold(5)_by_location,0.7897,0.7794,0.8051,,v3 features: epi lags 14/21/28/42/56j + weekly stats + target encoding OOF. Delta=-0.0106
+2026-09-11,"Ensemble_LGBM+XGB+CB_w(0.3,0.1,0.6)",GroupKFold(5)_by_location,0.8016,0.7925,0.8152,,Ensemble 3 modèles v1_features. LGBM=0.7951 XGB=0.7851 CB=0.8007 Ens=0.8016
+2026-09-11,LGBM_v5params_v4features_MAP_ENSO,GroupKFold(5)_by_location,0.7963,0.7889,0.8108,,MAP PfPR+Incidence+Mortality + ENSO ONI 0/3/6m. Delta=-0.0040
+2026-09-11,Stacking_L2_CBv10+CBbestSPW+LGBM,GroupKFold(5)_by_location,0.8185,0.8178,0.8195,,LogReg stacking on CB_v10+CB_bestSPW+LGBM OOF. Delta=+0.0158
+2026-09-11,CatBoost_Optuna50_SPW,GroupKFold(5)_by_location,0.824,0.8258,0.8213,,"Optuna 50 trials CB avec SPW libre. Best: {'scale_pos_weight': 1.1601820403948464, 'learning_rate': 0.019250076489702603, 'depth': 5, 'l2_leaf_reg': 4.920832814041603, 'subsample': 0.7621427522100634, 'colsample_bylevel': 0.9855706571945078, 'min_data_in_leaf': 20, 'bagging_temperature': 0.39124455495551713}. Delta=+0.0023"
+2026-09-11,LGBM_Optuna50_SPW,GroupKFold(5)_by_location,0.8212,0.8227,0.8189,,"Optuna 50 trials LGBM avec SPW libre. Delta=-0.0028. Best: {'scale_pos_weight': 1.6990899399959354, 'learning_rate': 0.01224223225620501, 'num_leaves': 106, 'min_child_samples': 42, 'feature_fraction': 0.5900462876823593, 'bagging_fraction': 0.6575318957431376, 'bagging_freq': 5, 'reg_alpha': 0.0431387981951902, 'reg_lambda': 1.2022839267524075}"
