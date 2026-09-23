@@ -3,8 +3,6 @@ data/Train.csv
 data/Test.csv
 data/climate_features.csv
 data/SampleSubmission.csv
-data/climate_health_starter_notebook_.ipynb
-
 # Derived data & cache
 data/*.parquet
 data/*.npy
@@ -23,7 +21,7 @@ build/
 
 # Jupyter
 .ipynb_checkpoints/
-*.ipynb
+data/climate_health_starter_notebook_.ipynb
 
 # OS
 .DS_Store

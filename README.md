@@ -188,18 +188,40 @@ climate_risk_health/
 │   ├── X_test.parquet                    # Engineered feature matrix (test)
 │   └── nasa_cache/                       # NASA POWER cached JSON (~880 files)
 │
+├── src/
+│   ├── 01_data_preparation/
+│   │   ├── download_nasa.py              # NASA POWER API bulk downloader (~880 JSON files)
+│   │   ├── 01_eda.ipynb                  # Exploratory data analysis
+│   │   └── 02_download_nasa.ipynb        # NASA POWER download walkthrough
+│   │
+│   ├── 02_feature_engineering/
+│   │   ├── build_features_v3.py          # Literature-based epi lags (PMC12676583)
+│   │   ├── build_features_v4.py          # MAP PfPR + ENSO ONI integration
+│   │   ├── build_features_v5.py          # Year×age interactions (best version)
+│   │   ├── build_nasa_features.py        # Humidity, wind & solar radiation features
+│   │   └── 02_feature_engineering.ipynb  # Feature engineering walkthrough
+│   │
+│   ├── 03_training/
+│   │   ├── train_catboost.py             # ★ Best model — CatBoost + Optuna 50 trials
+│   │   ├── train_catboost_baseline.py    # CatBoost baseline (pre-SPW tuning)
+│   │   ├── train_lightgbm.py             # LightGBM + Optuna with scale_pos_weight
+│   │   ├── train_xgboost.py              # XGBoost + Optuna
+│   │   └── 03_modeling.ipynb             # Modeling & evaluation walkthrough
+│   │
+│   └── 04_evaluation/
+│       ├── stacking.py                   # L2 stacking — 4 base models + LogReg meta
+│       └── ensemble.py                   # Weighted ensemble (LGBM + XGB + CB)
+│
 ├── notes/
 │   ├── 01_problem_understanding.md       # Literature review & hypotheses
 │   ├── 02_eda.md                         # EDA decisions & data quality
 │   ├── 03_feature_engineering.md         # All features with justification
 │   ├── 04_modeling.md                    # Experiment log & SHAP insights
 │   ├── experiments.csv                   # Machine-readable experiment tracker
-│   └── fig_*.png                         # All analysis charts
+│   └── fig_*.png                         # All analysis charts (13 figures)
 │
-├── optuna_cb_spw.py                      # Best model — CatBoost Optuna with SPW
-├── build_nasa_features.py                # NASA POWER feature pipeline
-├── download_nasa.py                      # NASA POWER API downloader
-├── stacking_v15.py                       # Stacking ensemble
+├── data/                                 # ⚠ gitignored — Zindi competition data
+├── requirements.txt
 └── README.md
 ```
 
@@ -215,11 +237,11 @@ python -m venv .venv && source .venv/bin/activate
 pip install catboost lightgbm optuna scikit-learn pandas numpy pyarrow
 
 # 2. Run the best model (CatBoost + Optuna, ~25 min on CPU)
-python optuna_cb_spw.py
+python src/03_training/train_catboost.py
 
 # 3. (Optional) Download NASA POWER external data
-python download_nasa.py       # Downloads ~880 JSON files (may take 30 min)
-python build_nasa_features.py  # Builds and evaluates humidity features
+python src/01_data_preparation/download_nasa.py        # ~880 JSON files, 30 min
+python src/02_feature_engineering/build_nasa_features.py
 ```
 
 **Reproducibility:** All random seeds are fixed at `SEED=42`. GroupKFold splits are deterministic given the `location` group column.
